@@ -1,0 +1,20 @@
+{% macro logo() %}<svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect width="24" height="24" rx="6" fill="currentColor"/><path d="M17 6c-6 0-9 3-9 7 0 1.6.6 3 1.6 4C10 12 13 9.5 17 9c-3 1.5-5 4-5.8 8.2.6.2 1.2.3 1.8.3 4 0 6-3 6-6.5 0-2-.4-3.6-2-5Z" fill="#fff"/></svg>{% endmacro %}
+{% macro badge(s) %}<span class="badge b-{{ s|lower|replace(' ','-') }}">{{ s }}</span>{% endmacro %}
+{% macro summary(label, value) %}<div class="card summary"><p class="num">{{ value }}</p><p class="muted">{{ label }}</p></div>{% endmacro %}
+{% macro empty(title, text='') %}<div class="card empty"><span class="empty-ico" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24"><path d="M4 13h4l1.8 2.6a1 1 0 0 0 .8.4h4.8a1 1 0 0 0 .8-.4L18 13h2"/><path d="M6.2 4.8h11.6L20 12.6v4.6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4.6l2.2-7.8Z"/></svg></span><p><b>{{ title }}</b></p><p class="muted">{{ text }}</p></div>{% endmacro %}
+{% macro complaint_card(c) %}
+<div class="card row">
+  <div class="grow">
+    <p><span class="code">{{ c.code }}</span> {{ badge(c.status) }}</p>
+    <p class="strong">{{ c.category }}</p>
+    <p class="muted small">{{ c.location }} · {{ c.date }}</p>
+  </div>
+  <div class="card-actions">
+    <a class="btn btn-outline" href="{{ url_for('complaint_detail', code=c.code) }}">View</a>
+    <form method="post" action="{{ url_for('delete_complaint', code=c.code) }}" onsubmit="return confirm('Delete complaint {{ c.code }}? This cannot be undone.')">
+      {{ csrf_input() }}<button class="btn btn-danger sm" type="submit">Delete</button>
+    </form>
+  </div>
+</div>
+{% endmacro %}
+{% macro field(label, hint='') %}<label class="field"><span>{{ label }}</span>{{ caller() }}{% if hint %}<small class="muted">{{ hint }}</small>{% endif %}</label>{% endmacro %}

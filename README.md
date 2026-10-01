@@ -1,97 +1,101 @@
-# 🏙️ e-Nagrik
+# E Nagrik
 
-### Smart Waste Management & Citizen Complaint System
+E Nagrik is a Flask-based waste reporting and civic engagement platform for citizens and municipal admins. Citizens can register, submit waste issues with photos, track complaint status, and earn green points through awareness quizzes. Admins can review complaints, update statuses, and manage user accounts.
 
-**e-Nagrik** is a web-based Waste Management System designed to provide citizens with a simple and centralized platform to report waste-related issues, request waste pickup, track complaints, and learn about proper waste segregation and disposal.
+## Features
 
-The system also provides an **Admin Dashboard** to help authorities manage complaints, monitor waste-related issues, and improve waste collection services.
+- Citizen registration and login
+- Waste complaint reporting with photo upload
+- AI-based waste classification using Gemini and a local ONNX fallback model
+- Complaint tracking and status updates
+- Green points and quiz-based engagement
+- Admin dashboard for monitoring and managing reports
+- Secure session handling and basic anti-abuse protections
 
----
+## Tech Stack
 
-## 📌 About the Project
+- Python 3
+- Flask
+- Flask-SQLAlchemy
+- SQLite
+- Pillow, NumPy, ONNX Runtime
+- Gemini API integration for image validation and classification
 
-Cities, colleges, residential societies, and public places generate a large amount of waste every day. Traditional waste collection systems often depend on manual processes, which can result in:
+## Project Structure
 
-- 🗑️ Overflowing garbage bins
-- 🚛 Missed or delayed waste collection
-- ♻️ Improper waste segregation
-- 🚯 Garbage dumped in public areas
-- 📢 Difficulty in reporting waste-related problems
-- 📊 Lack of centralized complaint data
+- `app.py` — main Flask application and route definitions
+- `models.py` — database models for users and complaints
+- `data.py` — static app data such as categories, statuses, and badge rules
+- `gemini_api.py` — Google Gemini API wrapper for analysis and validation
+- `ai_waste.py` — local on-device waste detection fallback using ONNX
+- `static/` — CSS, JS, and uploaded images
+- `templates/` — Jinja HTML templates for citizen and admin pages
+- `enagrik.db` — SQLite database file generated at runtime
+- `requirements.txt` — Python dependency list
 
-**e-Nagrik** aims to solve these problems by creating a centralized digital platform where citizens can report issues and track their complaints easily.
+## Setup
 
----
+### 1. Create a virtual environment
 
-## ✨ Key Features
+On Windows:
 
-### 👤 1. User Registration & Login
-- Secure user registration
-- User login system
-- Personalized user access
+```powershell
+python -m venv venv
+venv\Scripts\activate
+```
 
-### 🗑️ 2. Report Waste Issues
-Citizens can report problems such as:
-- Overflowing garbage bins
-- Garbage on roads
-- Illegal dumping
-- Missed waste collection
-- Other waste-related issues
+On macOS/Linux:
 
-### 🚛 3. Waste Pickup Request
-Users can submit requests for waste collection from their location.
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
 
-### 📍 4. Complaint Tracking
-- Submit complaints
-- Track complaint status
-- Check whether an issue has been resolved
+### 2. Install dependencies
 
-### 🖥️ 5. Admin Dashboard
-Administrators can:
-- View reported complaints
-- Manage waste pickup requests
-- Monitor complaint status
-- Identify frequently reported areas
-- Manage waste-related data
+```bash
+pip install -r requirements.txt
+```
 
-### ♻️ 6. Waste Awareness Section
-Provides useful information about:
-- Wet and dry waste
-- Waste segregation
-- Proper disposal methods
-- Recycling
-- Environmental awareness
+### 3. Run the app
 
----
+```bash
+python app.py
+```
 
-## 🎯 Objectives
-
-The main objectives of **e-Nagrik** are:
-
-- To provide a centralized platform for waste-related complaints.
-- To make waste reporting simple and accessible.
-- To improve communication between citizens and authorities.
-- To make complaint tracking transparent.
-- To promote proper waste segregation and disposal.
-- To help administrators monitor waste-management activities.
-
----
-
-## 🔄 How It Works
+The application will run on:
 
 ```text
-Citizen
-   ↓
-Register / Login
-   ↓
-Report Waste Issue
-   ↓
-Submit Complaint / Pickup Request
-   ↓
-Complaint Assigned & Managed
-   ↓
-Admin Takes Action
-   ↓
-Complaint Status Updated
-   ↓
-Citizen Tracks Resolution
+http://127.0.0.1:5001
+```
+
+## Configuration
+
+The app uses environment variables for configuration:
+
+- `SECRET_KEY` — Flask session secret, default: `dev-only-change-me`
+- `ENABLE_HTTPS` — set to `1` to enable secure cookies and HSTS
+- `ADMIN_EMAIL` — admin email, default: `enagrik@gmail.com`
+- `ADMIN_PASSWORD` — admin password, default: `admin@enagrik`
+- `GEMINI_API_KEY` — Google AI Studio key for Gemini features
+- `GEMINI_MODEL` — optional model override
+
+## Default Accounts
+
+On first run, the app creates the database and seeds default users if no users exist.
+
+- Citizen: `aarav@example.com` / `citizen123`
+- Admin: `enagrik@gmail.com` / `admin@enagrik`
+
+## Notes
+
+- The SQLite database file is created automatically in the project root as `enagrik.db`.
+- Uploaded complaint images are stored in `static/uploads`.
+- The app tries Gemini first for AI analysis and falls back to the local ONNX model if the cloud service is unavailable.
+- The local on-device model may download required files automatically on first use.
+
+## Development Tips
+
+- Use a real secret key in production instead of the default development value.
+- Set `ENABLE_HTTPS=1` when running the app behind HTTPS.
+- Keep the Gemini API key in environment variables instead of hardcoding it in source files.

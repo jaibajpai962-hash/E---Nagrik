@@ -1,0 +1,18 @@
+{% extends 'base.html' %}{% from '_macros.html' import logo %}
+{% block body %}
+<div class="admin-shell">
+  <aside class="sidebar">
+    <div class="side-head"><a class="logo" href="{{ url_for('admin_dashboard') }}">{{ logo() }} E Nagrik</a>
+      <button class="menu-btn" id="menu-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav">☰</button></div>
+    <p class="who"><span class="muted small">Signed in as</span><br>Municipal Admin</p>
+    <nav id="nav" class="nav" aria-label="Admin">
+      <a class="{{ 'active' if request.endpoint == 'admin_dashboard' }}" href="{{ url_for('admin_dashboard') }}">Overview</a>
+      <a class="{{ 'active' if request.endpoint == 'admin_complaints' }}" href="{{ url_for('admin_complaints') }}">Complaints</a>
+      <a class="{{ 'active' if request.endpoint == 'admin_users' }}" href="{{ url_for('admin_users') }}">Users</a>
+      <a class="{{ 'active' if request.endpoint == 'profile' }}" href="{{ url_for('profile') }}">My Profile</a>
+      <form method="post" action="{{ url_for('logout') }}">{{ csrf_input() }}<button class="linkbtn danger">Logout</button></form>
+    </nav>
+  </aside>
+  <main class="admin-main">{% block content %}{% endblock %}</main>
+</div>
+{% endblock %}

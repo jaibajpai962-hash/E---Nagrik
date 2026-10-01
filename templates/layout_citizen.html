@@ -1,0 +1,17 @@
+{% extends 'base.html' %}{% from '_macros.html' import logo %}
+{% block body %}
+<header class="topbar"><div class="wrap bar">
+  <a class="logo" href="{{ url_for('dashboard') }}">{{ logo() }} E Nagrik</a>
+  <button class="menu-btn" id="menu-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav">☰</button>
+  <nav id="nav" class="nav" aria-label="Main">
+    {% set ep = request.endpoint %}
+    <a class="{{ 'active' if ep == 'dashboard' }}" href="{{ url_for('dashboard') }}">Dashboard</a>
+    <a class="{{ 'active' if ep == 'report_issue' }}" href="{{ url_for('report_issue') }}">Report Issue</a>
+    <a class="{{ 'active' if ep in ('my_complaints','complaint_detail') }}" href="{{ url_for('my_complaints') }}">My Complaints</a>
+    <a class="{{ 'active' if ep == 'green_score' }}" href="{{ url_for('green_score') }}">Green Score</a>
+    <a class="{{ 'active' if ep == 'profile' }}" href="{{ url_for('profile') }}">My Profile</a>
+    <form method="post" action="{{ url_for('logout') }}">{{ csrf_input() }}<button class="linkbtn danger">Logout</button></form>
+  </nav>
+</div></header>
+<main class="wrap page">{% block content %}{% endblock %}</main>
+{% endblock %}

@@ -1,0 +1,57 @@
+{
+  "generated_at": "2026-10-01T00:55:49Z",
+  "source": "gemini",
+  "count": 5,
+  "questions": [
+    {
+      "q": "How should you wrap used sanitary pads before putting them in the waste bin?",
+      "options": [
+        "Throw them directly as is",
+        "Wrap in newspaper or a paper pouch",
+        "Wash them and reuse",
+        "Flush them down the toilet"
+      ],
+      "answer": 1
+    },
+    {
+      "q": "What is the safest way to dispose of used needles or syringes at home?",
+      "options": [
+        "Throw directly in the dry waste bin",
+        "Put in the wet waste bin",
+        "Keep in a puncture-proof container before binning",
+        "Leave them in the open"
+      ],
+      "answer": 2
+    },
+    {
+      "q": "Which bin should diapers be disposed of in?",
+      "options": [
+        "Green bin (Wet waste)",
+        "Blue bin (Dry waste)",
+        "Red bin (Sanitary waste)",
+        "Any random bin"
+      ],
+      "answer": 2
+    },
+    {
+      "q": "What should you do with blood-stained bandages before discarding them?",
+      "options": [
+        "Wrap them securely in paper",
+        "Throw them in the garden",
+        "Keep them with plastic waste",
+        "Mix with food waste"
+      ],
+      "answer": 0
+    },
+    {
+      "q": "Why must you label a packet containing sharp medical waste?",
+      "options": [
+        "To make it look clean",
+        "To warn sanitation workers of hazards",
+        "To help in recycling",
+        "It is not required"
+      ],
+      "answer": 1
+    }
+  ]
+}

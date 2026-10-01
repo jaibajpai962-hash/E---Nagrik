@@ -1,0 +1,25 @@
+{% extends 'layout_citizen.html' %}{% from '_macros.html' import summary, complaint_card, empty %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="dashboard-heading"><div><h1>Hello, {{ user.name.split()[0] }}!</h1><p class="muted mb">Help us keep your neighbourhood clean.</p></div>
+  <a class="dashboard-avatar" href="{{ url_for('profile') }}" aria-label="Open My Profile">
+    {% if user.photo %}<img src="{{ url_for('static', filename='uploads/' + user.photo) }}" alt="Profile photo">
+    {% else %}<span>{{ user.name[:1]|upper }}</span>{% endif %}
+  </a>
+</div>
+<div class="grid4">{{ summary('Total Complaints', stats.total) }}{{ summary('Pending', stats.pending) }}{{ summary('Resolved', stats.resolved) }}{{ summary('Green Points', user.green_points) }}</div>
+<div class="actions left my">
+  <a class="btn btn-primary" href="{{ url_for('report_issue') }}">Report Waste Issue</a>
+  <a class="btn btn-outline" href="{{ url_for('my_complaints') }}">View My Complaints</a>
+</div>
+<div class="cols">
+  <section><h2>Recent Complaints</h2>
+    {% for c in recent %}{{ complaint_card(c) }}{% else %}{{ empty('No complaints yet', 'Report your first issue to get started.') }}{% endfor %}</section>
+  <aside class="card"><p class="muted small">Green Score</p>
+    <p class="big">{{ user.green_points }} Points</p>
+    <p class="small"><span class="pill">{{ badge.name }}</span></p>
+    <div class="bar-track" role="progressbar" aria-valuenow="{{ user.green_points }}" aria-valuemax="{{ badge.goal }}"><div class="bar-fill" style="width:{{ badge.pct }}%"></div></div>
+    <p class="muted small">{{ user.green_points }} / {{ badge.goal }}</p>
+    <a class="btn btn-outline block" href="{{ url_for('green_score') }}">Open Green Score</a></aside>
+</div>
+{% endblock %}

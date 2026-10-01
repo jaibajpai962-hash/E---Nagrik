@@ -1,0 +1,31 @@
+{% extends 'layout_admin.html' %}{% from '_macros.html' import badge, empty %}
+{% block title %}Complaints{% endblock %}
+{% block content %}
+<h1>All Complaints</h1><p class="muted mb">Search, review and update complaint status.</p>
+<form class="toolbar" method="get">
+  <input class="input" type="search" name="q" value="{{ q }}" placeholder="Search by complaint ID or citizen name" aria-label="Search complaints">
+  <select class="input sel" name="status" aria-label="Filter by status" onchange="this.form.submit()"><option>All</option>
+    {% for s in STATUSES %}<option {{ 'selected' if s == flt }}>{{ s }}</option>{% endfor %}</select>
+  <button class="btn btn-outline">Search</button></form>
+{% for c in complaints %}
+<div class="card row">
+  <div class="grow"><p><span class="code">{{ c.code }}</span> {{ badge(c.status) }} <span class="muted small">{{ c.priority }} priority</span></p>
+    <p class="strong">{{ c.title }}</p><p class="muted small">{{ c.user.name }} · {{ c.category }} · {{ c.location }} · {{ c.date }}</p></div>
+  <button class="btn btn-outline manage" data-code="{{ c.code }}" data-title="{{ c.title }}" data-desc="{{ c.description }}" data-citizen="{{ c.user.name }}"
+    data-category="{{ c.category }}" data-location="{{ c.location }}" data-priority="{{ c.priority }}" data-date="{{ c.date }}" data-status="{{ c.status }}"
+    data-remark="{{ c.admin_remark }}" data-photo="{{ url_for('static', filename='uploads/' + c.photo) if c.photo else '' }}"
+    data-action="{{ url_for('admin_update', code=c.code) }}">Manage</button>
+</div>{% else %}{{ empty('No complaints found') }}{% endfor %}
+
+<dialog id="manage-dialog"><h2 id="m-title">Manage complaint</h2>
+  <p class="strong" id="m-ctitle"></p><p class="muted small" id="m-desc"></p>
+  <dl class="facts"><div><dt>Citizen</dt><dd id="m-citizen"></dd></div><div><dt>Category</dt><dd id="m-category"></dd></div>
+    <div><dt>Location</dt><dd id="m-location"></dd></div><div><dt>Priority</dt><dd id="m-priority"></dd></div></dl>
+  <img id="m-photo" class="photo" alt="Reported issue photo" hidden><div id="m-noimg" class="placeholder">No photo</div>
+  <form method="post" id="m-form">{{ csrf_input() }}
+    <label class="field"><span>Status</span><select class="input" name="status" id="m-status">{% for s in STATUSES %}<option>{{ s }}</option>{% endfor %}</select></label>
+    <label class="field"><span>Admin remarks</span><textarea class="input" name="remark" id="m-remark" rows="3" maxlength="300"></textarea></label>
+    <div class="actions"><button type="button" class="btn btn-outline" data-close>Cancel</button><button class="btn btn-primary">Save Update</button></div>
+  </form></dialog>
+{% endblock %}
+{% block scripts %}<script>window.OPEN_CODE = {{ open_code|tojson }};</script>{% endblock %}

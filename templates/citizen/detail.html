@@ -1,0 +1,25 @@
+{% extends 'layout_citizen.html' %}{% from '_macros.html' import badge %}
+{% block title %}{{ c.code }}{% endblock %}
+{% block content %}
+<div class="narrow">
+<div class="row">
+  <a class="btn btn-outline" href="{{ url_for('my_complaints') }}">← Back</a>
+  <form method="post" action="{{ url_for('delete_complaint', code=c.code) }}" onsubmit="return confirm('Delete complaint {{ c.code }}? This cannot be undone.')">
+    {{ csrf_input() }}<button class="btn btn-danger sm" type="submit">Delete</button>
+  </form>
+</div>
+<div class="card my">
+  <div class="row"><div class="grow"><p class="code">{{ c.code }}</p><h1>{{ c.title }}</h1></div>{{ badge(c.status) }}</div>
+  <p>{{ c.description }}</p>
+  <dl class="facts"><div><dt>Category</dt><dd>{{ c.category }}</dd></div><div><dt>Location</dt><dd>{{ c.location }}</dd></div>
+    <div><dt>Priority</dt><dd>{{ c.priority }}</dd></div><div><dt>Submitted</dt><dd>{{ c.date }}</dd></div></dl>
+  {% if c.photo %}<img class="photo" src="{{ url_for('static', filename='uploads/' + c.photo) }}" alt="Uploaded issue photo">
+  {% else %}<div class="placeholder">No photo uploaded</div>{% endif %}
+  <div class="remark"><span class="muted small">Admin remark</span><p>{{ c.admin_remark }}</p></div>
+</div>
+<div class="card"><h2>Status Timeline</h2>
+  <ol class="timeline">{% for s in STATUSES %}
+    <li class="{{ 'done' if loop.index0 <= step }} {{ 'now' if loop.index0 == step }}" {{ 'aria-current=step' if loop.index0 == step }}><span class="dot">{{ '✓' if loop.index0 <= step else loop.index }}</span>{{ s }}</li>{% endfor %}</ol></div>
+{% if c.status == 'Resolved' %}<div class="card done-card"><b>Resolution completed</b><p class="small">Thank you for helping keep the city clean.</p></div>{% endif %}
+</div>
+{% endblock %}

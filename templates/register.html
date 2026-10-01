@@ -1,0 +1,75 @@
+{% extends 'base.html' %}{% from '_macros.html' import logo, field %}
+{% block title %}Register{% endblock %}
+{% block body %}
+<div class="auth">
+  <div class="auth-shell">
+    <aside class="auth-brand">
+      <a class="logo" href="{{ url_for('login') }}">{{ logo() }} E Nagrik</a>
+      <div class="auth-copy">
+        <p class="auth-kicker">Join the clean-city movement</p>
+        <h1>Create your account in under a minute.</h1>
+        <p class="auth-sub">Kachre ki problem report karein, uska status track karein aur Green Points kamayein.</p>
+      </div>
+      <ul class="auth-points">
+        <li><span>✓</span> Report issues with photo &amp; live location</li>
+        <li><span>✓</span> AI waste detection for correct segregation</li>
+        <li><span>✓</span> Earn badges as your locality gets cleaner</li>
+      </ul>
+    </aside>
+
+    <main class="auth-panel">
+      <div class="auth-card">
+        <header class="auth-head">
+          <p class="auth-kicker">Create account</p>
+          <h2>Start reporting today</h2>
+          <p class="muted small">Details bhar kar apna citizen account banayein.</p>
+        </header>
+
+        <form method="post" class="auth-form" autocomplete="on">{{ csrf_input() }}
+          {% call field('Full Name') %}
+            <input class="input" name="name" value="{{ f.get('name','') }}" required autocomplete="name" placeholder="e.g. Your Full Name">
+          {% endcall %}
+          {% call field('Email') %}
+            <input class="input" type="email" name="email" value="{{ f.get('email','') }}" required autocomplete="email" inputmode="email" placeholder="you@example.com">
+          {% endcall %}
+          {% call field('Mobile Number') %}
+            <input class="input" name="mobile" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" value="{{ f.get('mobile','') }}" required autocomplete="tel" placeholder="10-digit mobile number">
+          {% endcall %}
+
+          {% call field('Password') %}
+            <span class="input-wrap">
+              <input class="input" type="password" id="reg-password" name="password" minlength="8" required autocomplete="new-password" placeholder="Min 8 characters, letter + number" aria-describedby="pw-rules">
+              <button type="button" class="pw-toggle" data-pw-toggle="reg-password" aria-label="Show password">Show</button>
+            </span>
+          {% endcall %}
+          <div class="pw-meter" id="pw-meter" data-score="0" aria-live="polite">
+            <div class="pw-bar"><i></i></div>
+            <p class="pw-label"><span>Password strength</span><b id="pw-strength">—</b></p>
+            <ul class="pw-rules" id="pw-rules">
+              <li data-rule="len">At least 8 characters</li>
+              <li data-rule="alpha">Contains a letter</li>
+              <li data-rule="num">Contains a number</li>
+            </ul>
+          </div>
+
+          {% call field('Confirm Password') %}
+            <span class="input-wrap">
+              <input class="input" type="password" id="reg-password2" name="password2" minlength="8" required autocomplete="new-password" placeholder="Re-enter your password">
+              <button type="button" class="pw-toggle" data-pw-toggle="reg-password2" aria-label="Show password">Show</button>
+            </span>
+          {% endcall %}
+
+          {% call field('Area / Address') %}
+            <input class="input" name="area" value="{{ f.get('area','') }}" required autocomplete="street-address" placeholder="e.g. Sector 12, New Delhi">
+          {% endcall %}
+
+          <button class="btn btn-primary block" id="register-btn">Create secure account</button>
+        </form>
+
+        <p class="auth-alt">Already registered? <a href="{{ url_for('login') }}">Login</a></p>
+      </div>
+    </main>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/auth.js') }}"></script>{% endblock %}

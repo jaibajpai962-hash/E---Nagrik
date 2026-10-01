@@ -1,0 +1,11 @@
+{% extends 'layout_citizen.html' %}{% from '_macros.html' import complaint_card, empty %}
+{% block title %}My Complaints{% endblock %}
+{% block content %}
+<h1>My Complaints</h1><p class="muted mb">Track the status of every issue you reported.</p>
+<form class="toolbar" method="get"><input type="hidden" name="status" value="{{ flt }}">
+  <input class="input" type="search" name="q" value="{{ q }}" placeholder="Search by ID, category or location" aria-label="Search complaints">
+  <button class="btn btn-outline">Search</button></form>
+<div class="chips" role="group" aria-label="Filter by status">
+  {% for s in filters %}<a class="chip {{ 'on' if s == flt }}" href="{{ url_for('my_complaints', status=s, q=q) }}">{{ s }}</a>{% endfor %}</div>
+{% for c in complaints %}{{ complaint_card(c) }}{% else %}{{ empty('No complaints found', 'Try a different search or filter.') }}{% endfor %}
+{% endblock %}

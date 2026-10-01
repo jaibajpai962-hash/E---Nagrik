@@ -1,0 +1,18 @@
+{% extends 'layout_admin.html' %}{% from '_macros.html' import summary, badge %}
+{% block title %}Overview{% endblock %}
+{% block content %}
+<div class="dashboard-heading"><div><h1>Waste Management Overview</h1><p class="muted mb">Municipal Admin</p></div>
+  <a class="dashboard-avatar" href="{{ url_for('profile') }}" aria-label="Open My Profile">
+    {% if user.photo %}<img src="{{ url_for('static', filename='uploads/' + user.photo) }}" alt="Profile photo">
+    {% else %}<span>{{ user.name[:1]|upper }}</span>{% endif %}
+  </a>
+</div>
+<div class="grid4">{{ summary('Total Complaints', stats.total) }}{{ summary('Pending', stats.pending) }}{{ summary('In Progress', stats.progress) }}{{ summary('Resolved', stats.resolved) }}</div>
+<div class="cols my">
+  <section class="card"><h2>Recent Complaints</h2>
+    <div class="scroll"><table><thead><tr><th>ID</th><th>Citizen</th><th>Category</th><th>Area</th><th>Priority</th><th>Status</th><th></th></tr></thead><tbody>
+    {% for c in recent %}<tr><td class="code">{{ c.code }}</td><td>{{ c.user.name }}</td><td>{{ c.category }}</td><td>{{ c.location }}</td><td>{{ c.priority }}</td><td>{{ badge(c.status) }}</td>
+      <td><a class="btn btn-outline sm" href="{{ url_for('admin_complaints', open=c.code) }}">Manage</a></td></tr>{% endfor %}</tbody></table></div></section>
+  <aside class="card"><h2>Common Issues</h2><ul class="list">{% for n, k in issues %}<li><span>{{ n }}</span><b>{{ k }}</b></li>{% endfor %}</ul></aside>
+</div>
+{% endblock %}

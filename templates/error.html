@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Something went wrong{% endblock %}
+{% block body %}
+<main class="error-page">
+  <section class="error-card" role="alert">
+    <p class="auth-kicker">E Nagrik</p>
+    <h1>Something went wrong</h1>
+    <p class="muted">Your session may have expired. Please try again.</p>
+    <a class="btn btn-primary" href="{{ recovery_url }}">Try again</a>
+  </section>
+</main>
+{% endblock %}

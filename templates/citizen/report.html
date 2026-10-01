@@ -1,0 +1,74 @@
+{% extends 'layout_citizen.html' %}{% from '_macros.html' import field %}
+{% block title %}Report Issue{% endblock %}
+{% block content %}
+<div class="narrow">
+<h1>Report Waste Issue</h1><p class="muted mb">Report a waste-related issue in your community.</p>
+<section class="card" id="ai-waste" aria-labelledby="ai-title">
+  <h2 id="ai-title">🤖 AI Waste Detector</h2>
+  <p class="muted small">Upload a waste photo to get a smart-segregation suggestion. This is an AI estimate, not a guaranteed determination.</p>
+  <div class="actions left" style="align-items:center;">
+    <div class="file-upload">
+      <label class="upload-btn" for="ai-file">Upload Image</label>
+      <span class="upload-meta" id="ai-file-name">No file selected</span>
+      <input type="file" id="ai-file" accept="image/png,image/jpeg,image/gif,image/webp">
+    </div>
+    <button type="button" class="btn btn-primary" id="ai-analyze" disabled>Analyze Waste</button>
+  </div>
+  <img id="ai-preview" class="preview" alt="Selected waste preview" hidden>
+  <p class="muted" id="ai-status" hidden>Analyzing waste image...</p>
+  <div class="skel-block" id="ai-skeleton" hidden aria-hidden="true">
+    <span class="skel lg"></span><span class="skel md"></span><span class="skel sm"></span>
+  </div>
+  <div class="remark" id="ai-error" hidden>
+    <p class="small" id="ai-error-text"></p>
+    <button type="button" class="btn btn-outline sm retry" id="ai-retry" hidden>Try again</button>
+  </div>
+  <div id="ai-result" hidden>
+    <dl class="facts">
+      <div><dt>Detected Item</dt><dd id="ai-item">—</dd></div>
+      <div><dt>Category</dt><dd id="ai-category">—</dd></div>
+      <div><dt>AI Confidence</dt><dd id="ai-confidence">—</dd></div>
+    </dl>
+    <div class="remark"><span class="muted small">♻ Recommended Action</span><p class="small" id="ai-disposal"></p></div>
+    <p class="muted small" id="ai-warning"></p>
+    <div class="actions">
+      <button type="button" class="btn btn-outline" id="ai-another">Analyze Another Image</button>
+      <button type="button" class="btn btn-primary" id="ai-report">Report This Issue</button>
+    </div>
+  </div>
+</section>
+<form class="card" method="post" enctype="multipart/form-data" id="report-form">{{ csrf_input() }}
+  <div class="two">
+    {% call field('Issue Category *') %}<select class="input" name="category" required><option value="">Select category</option>
+      {% for c in categories %}<option {{ 'selected' if f.get('category') == c }}>{{ c }}</option>{% endfor %}</select>{% endcall %}
+    {% call field('Priority') %}<select class="input" name="priority">
+      {% for p in priorities %}<option {{ 'selected' if (f.get('priority') or 'Medium') == p }}>{{ p }}</option>{% endfor %}</select>{% endcall %}
+  </div>
+  {% call field('Issue Title *') %}<input class="input" name="title" minlength="5" required value="{{ f.get('title','') }}" placeholder="e.g. Bin overflowing near park">{% endcall %}
+  {% call field('Description *') %}<textarea class="input" name="description" rows="4" minlength="10" required>{{ f.get('description','') }}</textarea>{% endcall %}
+  {% call field('Location / Area *') %}
+    <div class="loc-row">
+      <input class="input" id="location" name="location" required value="{{ f.get('location','') }}" placeholder="e.g. Sector 12 Park" autocomplete="off">
+      <button type="button" class="btn btn-outline sm" id="detect-location" title="Fetch my current location">📍 Use my location</button>
+    </div>
+    <small class="muted" id="loc-status" hidden></small>
+  {% endcall %}
+  {% call field('Photo (optional)') %}
+    <div class="file-upload compact">
+      <label class="upload-btn" for="photo">Choose file</label>
+      <span class="upload-meta" id="photo-file-name">No file selected</span>
+      <input type="file" name="photo" id="photo" accept="image/*">
+    </div>
+  {% endcall %}
+  <img id="photo-preview" class="preview" alt="Selected photo preview" hidden>
+  <button class="btn btn-primary">Submit Report</button>
+  <p class="muted small">Provide the details of the waste issue and submit your report.</p>
+</form></div>
+{% if done %}
+<dialog id="success-dialog" data-autoopen><h2>Issue reported successfully</h2>
+  <p class="center">Complaint ID: <b>{{ done.code }}</b></p><p class="center pts">You earned +5 Green Points.</p>
+  <div class="actions"><a class="btn btn-primary" href="{{ url_for('my_complaints') }}">Go to My Complaints</a>
+    <a class="btn btn-outline" href="{{ url_for('dashboard') }}">Go to Dashboard</a></div></dialog>
+{% endif %}
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/ai-detect.js') }}"></script>{% endblock %}

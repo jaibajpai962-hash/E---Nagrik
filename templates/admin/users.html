@@ -1,0 +1,24 @@
+{% extends 'layout_admin.html' %}
+{% from '_macros.html' import empty %}
+{% block title %}Users{% endblock %}
+{% block content %}
+<h1>Registered Users</h1>
+<p class="muted mb">View citizen accounts and their activity summary.</p>
+<form class="toolbar" method="get">
+  <input class="input" type="search" name="q" value="{{ q }}" placeholder="Search by name, email or area" aria-label="Search users">
+  <button class="btn btn-outline">Search</button>
+</form>
+{% if users %}
+<section class="card"><div class="scroll"><table>
+  <thead><tr><th>Name</th><th>Email</th><th>Mobile</th><th>Area</th><th>Role</th><th>Points</th><th>Complaints</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody>{% for u in users %}
+    <tr><td class="strong">{{ u.name }}</td><td>{{ u.email }}</td><td>{{ u.mobile or '—' }}</td><td>{{ u.area or '—' }}</td><td>{{ u.role|title }}</td><td>{{ u.green_points }}</td><td>{{ u.complaints|length }}</td>
+      <td><span class="badge {{ 'b-resolved' if u.is_active else 'b-rejected' }}">{{ 'Active' if u.is_active else 'Suspended' }}</span></td>
+      <td>{% if u.role == 'citizen' %}<div class="table-actions">
+        <form method="post" action="{{ url_for('admin_toggle_user_status', user_id=u.id) }}">{{ csrf_input() }}<button class="btn btn-outline sm" type="submit">{{ 'Suspend' if u.is_active else 'Activate' }}</button></form>
+        <form method="post" action="{{ url_for('admin_delete_user', user_id=u.id) }}" onsubmit="return confirm('Delete this user and all their complaints? This cannot be undone.')">{{ csrf_input() }}<button class="btn btn-danger sm" type="submit">Delete</button></form>
+      </div>{% else %}<span class="muted small">Protected</span>{% endif %}</td></tr>
+  {% endfor %}</tbody>
+</table></div></section>
+{% else %}{{ empty('No users found', 'Try a different search.') }}{% endif %}
+{% endblock %}

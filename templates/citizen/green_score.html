@@ -1,0 +1,25 @@
+{% extends 'layout_citizen.html' %}
+{% block title %}Green Score{% endblock %}
+{% block content %}
+<section class="hero" aria-label="Green score">
+  <h1>My Green Score</h1>
+  <p class="score">{{ user.green_points }} <span>Points</span></p>
+  <div class="bar-track light" role="progressbar" aria-valuenow="{{ user.green_points }}" aria-valuemax="{{ badge.goal }}"><div class="bar-fill" style="width:{{ badge.pct }}%"></div></div>
+  <p class="small">{{ user.green_points }} / {{ badge.goal }}</p>
+  <p><span class="pill on-dark">{{ badge.name }}</span></p>
+  <p class="small">{% if badge.next %}Earn {{ badge.to_next }} more points to become {{ badge.next }}.{% else %}You are a Green Champion. Keep it up!{% endif %}</p>
+  <button class="btn btn-white" id="quiz-open">Take Segregation Quiz</button>
+  <p class="small dim">Har correct answer par 1 Green Point. Quiz dobara khelkar score badha sakte hain.</p>
+</section>
+<div class="two my">
+  <section class="card"><h2>How to earn points</h2>
+    <ul class="list">{% for t, p in earn %}<li><span>{{ t }}</span><b class="pts">+{{ p }}</b></li>{% endfor %}</ul></section>
+  <section class="card"><h2>Badge levels</h2>
+    <ul class="list">{% for n, m, r in badges %}<li class="{{ 'cur' if n == badge.name }}"><span>{{ n }}</span><span>{{ r }}</span></li>{% endfor %}</ul></section>
+</div>
+<section aria-label="Waste segregation tips"><h2>Waste Segregation Tips</h2><p class="muted small mb">Learn how to separate waste correctly for responsible disposal.</p>
+  <div class="grid4">{% for t, txt, cls in tips %}<div class="card"><span class="pill tip-{{ cls }}">{{ t }}</span><p class="small">{{ txt }}</p></div>{% endfor %}</div></section>
+
+<dialog id="quiz-dialog" aria-labelledby="quiz-title"><h2 id="quiz-title">Segregation Quiz</h2><div id="quiz-body"></div></dialog>
+{% endblock %}
+{% block scripts %}<script>window.QUIZ = {{ quiz|tojson }};</script>{% endblock %}

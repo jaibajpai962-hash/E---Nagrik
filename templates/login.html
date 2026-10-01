@@ -1,0 +1,52 @@
+{% extends 'base.html' %}{% from '_macros.html' import logo, field %}
+{% block title %}Login{% endblock %}
+{% block body %}
+<div class="auth">
+  <div class="auth-shell{% if admin_mode %} admin-auth{% endif %}">
+    {% if not admin_mode %}<aside class="auth-brand">
+      <a class="logo" href="{{ url_for('login') }}">{{ logo() }} E Nagrik</a>
+      <div class="auth-copy">
+        <p class="auth-kicker">Waste Management Platform</p>
+        <h1>Keep your city clean, one report at a time.</h1>
+        <p class="auth-sub">Report waste, track it to resolution and earn Green Points for every cleaner street.</p>
+      </div>
+      <ul class="auth-points">
+        <li><span>✓</span> AI-powered waste detection &amp; smart segregation</li>
+        <li><span>✓</span> Live location and photo reporting</li>
+        <li><span>✓</span> Real-time complaint status tracking</li>
+      </ul>
+    </aside>{% endif %}
+
+    <main class="auth-panel">
+      <div class="auth-card">
+        <header class="auth-head">
+          <p class="auth-kicker">{{ 'Admin login' if admin_mode else 'Welcome back' }}</p>
+          <h2>{{ 'Sign in as administrator' if admin_mode else 'Sign in to your account' }}</h2>
+          {% if not admin_mode %}<p class="muted small">Apna account login karke report aur status dekhein.</p>{% endif %}
+        </header>
+
+        <form method="post" action="{{ url_for('login', admin='1') if admin_mode else url_for('login') }}" class="auth-form" autocomplete="on">{{ csrf_input() }}
+          {% call field('Email') %}
+            <input class="input" type="email" name="email" required autocomplete="username" inputmode="email" placeholder="{{ 'Admin email' if admin_mode else 'you@example.com' }}">
+          {% endcall %}
+          {% call field('Password') %}
+            <span class="input-wrap">
+              <input class="input" type="password" id="login-password" name="password" required autocomplete="current-password" placeholder="Enter your password">
+              <button type="button" class="pw-toggle" data-pw-toggle="login-password" aria-label="Show password">Show</button>
+            </span>
+          {% endcall %}
+          <button class="btn btn-primary block">Sign in securely</button>
+        </form>
+
+        {% if not admin_mode %}
+        <p class="auth-alt">New here? <a href="{{ url_for('register') }}">Create an account</a></p>
+        <form class="citizen-direct-login" method="post" action="{{ url_for('demo_citizen_login') }}">{{ csrf_input() }}<button class="btn btn-outline block">Login as Citizen</button></form>
+          <a class="btn btn-outline block" href="{{ url_for('login', admin='1') }}">Login as Admin</a>
+        {% endif %}
+
+      </div>
+    </main>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/auth.js') }}"></script>{% endblock %}
