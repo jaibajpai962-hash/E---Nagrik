@@ -1,7 +1,7 @@
 {% extends 'layout_citizen.html' %}{% from '_macros.html' import summary, complaint_card, empty %}
 {% block title %}Dashboard{% endblock %}
 {% block content %}
-<div class="dashboard-heading"><div><h1>Hello, {{ user.name.split()[0] }}!</h1><p class="muted mb">Help us keep your neighbourhood clean.</p><p>Admin portal hidden by user.</p></div>
+<div class="dashboard-heading"><div><h1>Hello, {{ user.name.split()[0] }}!</h1><p class="muted mb">Help us keep your neighbourhood clean.</p></div>
   <a class="dashboard-avatar" href="{{ url_for('profile') }}" aria-label="Open My Profile">
     {% if user.photo %}<img src="{{ url_for('static', filename='uploads/' + user.photo) }}" alt="Profile photo">
     {% else %}<span>{{ user.name[:1]|upper }}</span>{% endif %}
